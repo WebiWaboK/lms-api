@@ -1,19 +1,23 @@
-const pool = require('../config/db');
+const { obtenerConexion } = require('../config/db');
 
 const getUserByUsername = async (username) => {
     const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
     return rows[0];
 };
 
-const createUser = async (user) => {
-    const { firstName, lastName, email, password, role } = user;
-    await pool.execute(
-        'INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)',
-        [firstName, lastName, email, password, role]
-    );
-};
+async function registrar(firstName, lastName, email, password, role) {
+    const conexion = await obtenerConexion();
+    try {
+        await conexion.query('INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', [firstName, lastName, email, password, role]);
+        console.log('SI funca');
+    } catch (error) {
+        console.error('No funca', error);
+        throw error;
+    } finally {
+        conexion.release();
+    }
+}
 
 module.exports = {
-    getUserByUsername,
-    createUser
+    registrar // Cambiado de `resgistrar` a `registrar`
 };

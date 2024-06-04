@@ -1,37 +1,20 @@
-const bcrypt = require('bcrypt');
-const userModel = require('../models/userModel');
+const userService = require('../services/userService');
+const jwt = require('jsonwebtoken');
 
-exports.adminLogin = async (req, res) => {
-    const { username, password } = req.body;
-
+async function registrarUsuario(req, res) {
+    const { datos } = req.body;
     try {
-        const user = await userModel.getUserByUsername(username);
-        if (user && user.role === 'admin') {
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                res.status(200).send('Inicio de sesión exitoso');
-            } else {
-                res.status(401).send('Nombre de usuario o contraseña incorrectos');
-            }
-        } else {
-            res.status(401).send('Nombre de usuario o contraseña incorrectos');
+        if (!datos.firstName || !datos.lastName || !datos.email || !datos.password || !datos.role) {
+            throw new Error('Formato incorrecto');
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error del servidor');
+        await userService.registrarUsuario(datos.firstName, datos.lastName, datos.email, datos.password, datos.role); // Cambiado de `userService.registrar` a `userService.registrarUsuario`
+        res.status(201).send('Usuario Registrado');
+    } catch (error) {
+        console.error('No funca el controller', error);
+        res.status(500).send('Error de api');
     }
-};
+}
 
-exports.createUser = async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { firstName, lastName, email, password: hashedPassword, role };
-
-    try {
-        await userModel.createUser(user);
-        res.status(201).send('Usuario creado exitosamente');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error al crear el usuario');
-    }
+module.exports = {
+    registrarUsuario
 };

@@ -14,4 +14,8 @@ const pool = mysql2.createPool({
     queueLimit: 0
 });
 
+function obtenerConexion() {
+    return pool.promise().getConnection();
+}
+
 module.exports = pool.promise();
