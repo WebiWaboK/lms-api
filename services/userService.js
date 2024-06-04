@@ -1,14 +1,14 @@
 const userModel = require('../models/userModel');
 
-async function registrarUsuario(firstName, lastName, email, password, role) {
+async function registrarUsuario(firstName, lastName1, lastName2, email, password, role = 'teacher') {
     try {
-        await userModel.registrar(firstName, lastName, email, password, role);
+        await userModel.registrar(firstName, lastName1, lastName2, email, password, role);
     } catch (error) {
-        console.error('No funco el servicio', error);
+        console.error('Error en el servicio de usuario', error);
         throw error;
     }
 }
 
-module.exports = { // Cambiado de `module.export` a `module.exports`
-    registrarUsuario // Cambiado de `resgistrar` a `registrarUsuario`
+module.exports = {
+    registrarUsuario
 };

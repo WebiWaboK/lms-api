@@ -1,17 +1,16 @@
 const userService = require('../services/userService');
-const jwt = require('jsonwebtoken');
 
 async function registrarUsuario(req, res) {
-    const { datos } = req.body;
+    const { firstName, lastName1, lastName2, email, password, role } = req.body;
     try {
-        if (!datos.firstName || !datos.lastName || !datos.email || !datos.password || !datos.role) {
+        if (!firstName || !lastName1 || !lastName2 || !email || !password || !role) {
             throw new Error('Formato incorrecto');
         }
-        await userService.registrarUsuario(datos.firstName, datos.lastName, datos.email, datos.password, datos.role); // Cambiado de `userService.registrar` a `userService.registrarUsuario`
+        await userService.registrarUsuario(firstName, lastName1, lastName2, email, password, role);
         res.status(201).send('Usuario Registrado');
     } catch (error) {
-        console.error('No funca el controller', error);
-        res.status(500).send('Error de api');
+        console.error('Error en el controlador de usuario', error);
+        res.status(500).send('Error de API');
     }
 }
 

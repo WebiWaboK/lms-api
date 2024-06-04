@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const adminRoutes = require('./routes/adminRoutes');
 const userController = require('./controllers/userController');
 
 dotenv.config();
@@ -11,10 +10,9 @@ const port = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 
-app.use('/api/admin', adminRoutes);
-
+// Rutas de la API
 app.post('/api/registrar', userController.registrarUsuario);
 
 app.listen(port, () => {
-    console.log(`Servidor iniciado en http://localhost:${port}`);
+    console.log(`Servidor de la API iniciado en http://localhost:${port}`);
 });

@@ -1,17 +1,12 @@
-const { obtenerConexion } = require('../config/db');
+const db = require('../config/db');
 
-const getUserByUsername = async (username) => {
-    const [rows] = await pool.execute('SELECT * FROM users WHERE username = ?', [username]);
-    return rows[0];
-};
-
-async function registrar(firstName, lastName, email, password, role) {
-    const conexion = await obtenerConexion();
+async function registrar(firstName, lastName1, lastName2, email, password, role = 'teacher') {
+    const conexion = await db.obtenerConexion();
     try {
-        await conexion.query('INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)', [firstName, lastName, email, password, role]);
-        console.log('SI funca');
+        await conexion.query('INSERT INTO teachers (first_name, last_name1, last_name2, email, password, role) VALUES (?, ?, ?, ?, ?, ?)', [firstName, lastName1, lastName2, email, password, role]);
+        console.log('Usuario registrado exitosamente');
     } catch (error) {
-        console.error('No funca', error);
+        console.error('Error al registrar usuario', error);
         throw error;
     } finally {
         conexion.release();
@@ -19,5 +14,5 @@ async function registrar(firstName, lastName, email, password, role) {
 }
 
 module.exports = {
-    registrar // Cambiado de `resgistrar` a `registrar`
+    registrar
 };

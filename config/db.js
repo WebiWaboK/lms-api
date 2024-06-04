@@ -18,4 +18,6 @@ function obtenerConexion() {
     return pool.promise().getConnection();
 }
 
-module.exports = pool.promise();
+module.exports = {
+    obtenerConexion
+};
